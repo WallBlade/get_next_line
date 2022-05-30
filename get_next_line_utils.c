@@ -6,7 +6,7 @@
 /*   By: zel-kass <zel-kass@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:36:49 by zel-kass          #+#    #+#             */
-/*   Updated: 2022/05/29 16:18:12 by zel-kass         ###   ########.fr       */
+/*   Updated: 2022/05/30 19:04:00 by zel-kass         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	char	*dest;
 
 	if (!s1)
-		return (ft_strdup(s2));
+		return (free(s1), ft_strdup(s2));
 	len = ft_strlen(s1) + ft_strlen(s2);
 	dest = (char *)malloc(sizeof(char) * (len + 1));
 	if (!dest)
@@ -62,10 +62,11 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[++j])
 		dest[i++] = s2[j];
 	dest[i] = '\0';
+	free(s1);
 	return (dest);
 }
 
-int	ft_strchr(const char *str, int ret)
+int	ft_strchr(const char *str)
 {
 	int		i;
 
@@ -75,21 +76,8 @@ int	ft_strchr(const char *str, int ret)
 	while (str[i])
 	{
 		if (str[i] == '\n')
-			return (i);
+			return (1);
 		i++;
 	}
-	if (ret == 0)
-		return (i);
 	return (0);
-}
-
-void	ft_bzero(void *s)
-{
-	size_t	i;
-	char	*ptr;
-
-	ptr = (char *)s;
-	i = 0;
-	while (ptr && ptr[i])
-		ptr[i++] = '\0';
 }

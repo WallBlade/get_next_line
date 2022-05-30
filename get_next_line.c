@@ -6,31 +6,37 @@
 /*   By: zel-kass <zel-kass@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:33:46 by zel-kass          #+#    #+#             */
-/*   Updated: 2022/05/29 16:22:07 by zel-kass         ###   ########.fr       */
+/*   Updated: 2022/05/30 19:04:28 by zel-kass         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_stash_san(char *stash, char *buf, int ret)
+char	*ft_stash_san(char *stash, char *buf)
 {
 	int		i;
 	int		j;
 	char	*line;
 
-	i = ft_strchr(stash, ret);
-	j = -1;
+	i = 0;
+	while (stash[i] != '\n' && stash[i])
+		i++;
+	if (stash[i] == '\n')
+		i++;
+	j = 0;
 	line = malloc(sizeof(char) * (i + 1));
 	if (!line)
 		return (NULL);
-	while (++j <= i)
+	while (j < i && stash[j])
+	{
 		line[j] = stash[j];
+		j++;
+	}
 	line[j] = '\0';
 	j = 0;
-	while (stash[i + 1])
-		buf[j++] = stash[++i];
-	ft_bzero(&buf[j]);
-	free(stash);
+	while (stash[i] && buf[j])
+		buf[j++] = stash[i++];
+	buf[j] = '\0';
 	return (line);
 }
 
@@ -40,38 +46,22 @@ char	*get_next_line(int fd)
 	char		*line;
 	char		*stash;
 	static char	buf[BUFFER_SIZE + 1];
-	
-	ret = 1;
+
+	if (fd < 0 || fd > 1000 || BUFFER_SIZE < 1)
+		return (NULL);
+	ret = BUFFER_SIZE;
 	stash = NULL;
 	stash = ft_strjoin(stash, buf);
-	while (ret && !ft_strchr(buf, ret))
+	while (ret == BUFFER_SIZE && !ft_strchr(buf))
 	{
 		ret = read(fd, buf, BUFFER_SIZE);
-		if (ret == 0)
-			return (ft_stash_san(stash, buf, ret));
+		if (ret == -1)
+			return (free(stash), NULL);
+		buf[ret] = '\0';
+		if (ret == 0 && !stash[0])
+			return (free(stash), NULL);
 		stash = ft_strjoin(stash, buf);
 	}
-	line = ft_stash_san(stash, buf, ret);
-	return (line);
+	line = ft_stash_san(stash, buf);
+	return (free(stash), line);
 }
-
-// int main()
-// {
-// 	int fd = open("test.txt", O_RDONLY);
-// 	char *str = get_next_line(fd);
-// 	printf("gnl1 = %s\n", str);
-// 	char *str2 = get_next_line(fd);
-// 	printf("gnl2 = %s\n", str2);
-// 	char *str3 = get_next_line(fd);
-// 	printf("gnl3 = %s\n", str3);
-// 	char *str4 = get_next_line(fd);
-// 	printf("gnl4 = %s\n", str4);
-// 	char *str5 = get_next_line(fd);
-// 	printf("%s", str5);
-// 	char *str6 = get_next_line(fd);
-// 	printf("%s", str6);
-
-// 	char *line = get_next_line(fd);
-// 	printf("%s\n", line);
-// 	return (0);
-// }
