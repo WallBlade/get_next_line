@@ -6,7 +6,7 @@
 /*   By: zel-kass <zel-kass@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:33:46 by zel-kass          #+#    #+#             */
-/*   Updated: 2022/05/30 19:04:28 by zel-kass         ###   ########.fr       */
+/*   Updated: 2022/05/30 19:39:49 by zel-kass         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*get_next_line(int fd)
 	char		*stash;
 	static char	buf[BUFFER_SIZE + 1];
 
-	if (fd < 0 || fd > 1000 || BUFFER_SIZE < 1)
+	if (fd < 0 || fd > 1024 || BUFFER_SIZE < 1)
 		return (NULL);
 	ret = BUFFER_SIZE;
 	stash = NULL;
