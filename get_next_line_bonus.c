@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zel-kass <zel-kass@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/31 13:28:24 by zel-kass          #+#    #+#             */
-/*   Updated: 2022/05/31 15:27:26 by zel-kass         ###   ########.fr       */
+/*   Created: 2022/05/31 13:30:05 by zel-kass          #+#    #+#             */
+/*   Updated: 2022/05/31 15:27:27 by zel-kass         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_clean(char *stash, char *buf)
 {
@@ -45,23 +45,23 @@ char	*get_next_line(int fd)
 	int			res;
 	char		*line;
 	char		*stash;
-	static char	buf[BUFFER_SIZE + 1];
+	static char	buf[FOPEN_MAX][BUFFER_SIZE + 1];
 
 	if (fd < 0 || fd > FOPEN_MAX || BUFFER_SIZE < 1)
 		return (NULL);
 	res = BUFFER_SIZE;
 	stash = NULL;
-	stash = ft_strjoin(stash, buf);
-	while (res == BUFFER_SIZE && !ft_strchr(buf))
+	stash = ft_strjoin(stash, buf[fd]);
+	while (res == BUFFER_SIZE && !ft_strchr(buf[fd]))
 	{
-		res = read(fd, buf, BUFFER_SIZE);
+		res = read(fd, buf[fd], BUFFER_SIZE);
 		if (res == -1)
 			return (free(stash), NULL);
-		buf[res] = '\0';
+		buf[fd][res] = '\0';
 		if (res == 0 && !stash[0])
 			return (free(stash), NULL);
-		stash = ft_strjoin(stash, buf);
+		stash = ft_strjoin(stash, buf[fd]);
 	}
-	line = ft_clean(stash, buf);
+	line = ft_clean(stash, buf[fd]);
 	return (free(stash), line);
 }
